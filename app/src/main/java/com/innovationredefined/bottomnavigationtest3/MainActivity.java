@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        customizeBottomNavigationViewAccordingToOrientation(bottomNavigationView,this.getResources().getConfiguration().orientation);
+        customizeBottomNavigationViewAccordingToOrientation(bottomNavigationView, this.getResources().getConfiguration().orientation);
         setupBottomNavigationViewWithViewpager(bottomNavigationView);
 
     }
 
-    void setupBottomNavigationViewWithViewpager(BottomNavigationView bottomNavigationView){
+    void setupBottomNavigationViewWithViewpager(BottomNavigationView bottomNavigationView) {
         SampleFragmentAdapter fragmentAdapter = new SampleFragmentAdapter(getSupportFragmentManager());
         viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentAdapter);
@@ -66,15 +66,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void customizeBottomNavigationViewAccordingToOrientation(BottomNavigationView bottomNavigationView, int orientation){
-        if(orientation== Configuration.ORIENTATION_PORTRAIT)
-            customizeBottomNavigationView(bottomNavigationView,false,true);
-        else if(orientation==Configuration.ORIENTATION_LANDSCAPE)
-            customizeBottomNavigationView(bottomNavigationView,true,true);
+    void customizeBottomNavigationViewAccordingToOrientation(BottomNavigationView bottomNavigationView, int orientation) {
+        if (orientation == Configuration.ORIENTATION_PORTRAIT)
+            customizeBottomNavigationView(bottomNavigationView, false);
+        else if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+            customizeBottomNavigationView(bottomNavigationView, true);
     }
 
     @SuppressLint("RestrictedAPI")
-    void customizeBottomNavigationView(BottomNavigationView bottomNavigationView, boolean shouldShowLabels, boolean shouldDisableShiftMOde) {
+    void customizeBottomNavigationView(BottomNavigationView bottomNavigationView, boolean shouldShowLabels) {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
 
         String bottomNavigationMenuItemLabel;
@@ -83,23 +83,22 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
 
         //Disable shift mode
-        if (shouldDisableShiftMOde) {
-            try {
-                Field shiftingMode = bottomNavigationMenuView.getClass().getDeclaredField("mShiftingMode");
-                shiftingMode.setAccessible(true);
-                shiftingMode.setBoolean(bottomNavigationMenuView, false);
-                shiftingMode.setAccessible(false);
-                for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
-                    BottomNavigationItemView item = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
-                    item.setShiftingMode(false);
-                    item.setChecked(item.getItemData().isChecked());
-                }
-            } catch (NoSuchFieldException e) {
-                Log.e("BNVHelper", "Unable to get shift mode field", e);
-            } catch (IllegalAccessException e) {
-                Log.e("BNVHelper", "Unable to change value of shift mode", e);
+        try {
+            Field shiftingMode = bottomNavigationMenuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(bottomNavigationMenuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
+                item.setShiftingMode(false);
+                item.setChecked(item.getItemData().isChecked());
             }
+        } catch (NoSuchFieldException e) {
+            Log.e("BNVHelper", "Unable to get shift mode field", e);
+        } catch (IllegalAccessException e) {
+            Log.e("BNVHelper", "Unable to change value of shift mode", e);
         }
+
         //Customize menu items
         for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
             //Get the menu item

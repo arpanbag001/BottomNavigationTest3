@@ -1,6 +1,7 @@
 package com.innovationredefined.bottomnavigationtest3;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenu;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,40 +27,51 @@ import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
-        }
-    };
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        customizeBottomNavigationViewAccordingToOrientation(bottomNavigationView,this.getResources().getConfiguration().orientation);
+        setupBottomNavigationViewWithViewpager(bottomNavigationView);
 
-        customizeBottomNavigationView(bottomNavigationView, false,true);
     }
 
+    void setupBottomNavigationViewWithViewpager(BottomNavigationView bottomNavigationView){
+        SampleFragmentAdapter fragmentAdapter = new SampleFragmentAdapter(getSupportFragmentManager());
+        viewPager = findViewById(R.id.viewpager);
+        viewPager.setAdapter(fragmentAdapter);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_item_one:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.menu_item_two:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.menu_item_three:
+                        viewPager.setCurrentItem(2);
+                        break;
+                    case R.id.menu_item_four:
+                        viewPager.setCurrentItem(3);
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
+    void customizeBottomNavigationViewAccordingToOrientation(BottomNavigationView bottomNavigationView, int orientation){
+        if(orientation== Configuration.ORIENTATION_PORTRAIT)
+            customizeBottomNavigationView(bottomNavigationView,false,true);
+        else if(orientation==Configuration.ORIENTATION_LANDSCAPE)
+            customizeBottomNavigationView(bottomNavigationView,true,true);
+    }
 
     @SuppressLint("RestrictedAPI")
     void customizeBottomNavigationView(BottomNavigationView bottomNavigationView, boolean shouldShowLabels, boolean shouldDisableShiftMOde) {

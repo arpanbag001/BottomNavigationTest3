@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
-
+        android:id="@+id/menu_item_one"
+        android:icon="@drawable/ic_audiotrack_black_24dp"
+        android:title="Music" />
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
-
+        android:id="@+id/menu_item_two"
+        android:icon="@drawable/ic_backup_black_24dp"
+        android:title="Backup" />
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
+        android:id="@+id/menu_item_three"
+        android:icon="@drawable/ic_camera_black_24dp"
+        android:title="Camera" />
     <item
-        android:id="@+id/navigation_home2"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="2nd Home!" />
-
+        android:id="@+id/menu_item_four"
+        android:icon="@drawable/ic_visibility_black_24dp"
+        android:title="Visibility" />
 </menu>

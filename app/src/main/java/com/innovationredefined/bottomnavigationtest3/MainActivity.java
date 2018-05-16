@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        customizeBottomNavigationView(bottomNavigationView);
+        customizeBottomNavigationView(bottomNavigationView,false);
     }
 
-    void customizeBottomNavigationView(BottomNavigationView bottomNavigationView){
+    void customizeBottomNavigationView(BottomNavigationView bottomNavigationView, boolean shouldShowLabels){
         LayoutInflater layoutInflater = LayoutInflater.from(this);
 
         String bottomNavigationMenuItemLabel;
@@ -65,13 +65,28 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
 
         for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
+            //Get the menu item
             BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
+
+            //Extract images and labels
             bottomNavigationMenuItemLabel = ((TextView) ((BaselineLayout) bottomNavigationItemView.getChildAt(1)).getChildAt(0)) .getText().toString();
             bottomNavigationMenuItemImage = ((ImageView)bottomNavigationItemView.getChildAt(0)).getDrawable();
+
+            //Remove the imageviews and textviews
             bottomNavigationItemView.removeAllViews();
+
+            //Inflate the custom menu item
             ConstraintLayout customMenuItemView = (ConstraintLayout) layoutInflater.inflate(R.layout.bottom_nav_menu_item_customized, null, false);
+
+            //Set the previously extracted data
             ((ImageView)((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(0)).setImageDrawable(bottomNavigationMenuItemImage);
             ((TextView)((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(1)).setText(bottomNavigationMenuItemLabel);
+
+            //Hide the Labels if necessary
+            if(!shouldShowLabels)
+                ((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+
+            //Add the custom MenuItemView
             bottomNavigationItemView.addView(customMenuItemView);
         }
     }

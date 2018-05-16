@@ -1,5 +1,6 @@
 package com.innovationredefined.bottomnavigationtest3;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         customizeBottomNavigationView(bottomNavigationView,false);
     }
 
+
+    @SuppressLint("RestrictedAPI")
     void customizeBottomNavigationView(BottomNavigationView bottomNavigationView, boolean shouldShowLabels){
         LayoutInflater layoutInflater = LayoutInflater.from(this);
 
@@ -64,6 +69,24 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
 
+        //Disable shift mode
+        try {
+            Field shiftingMode = bottomNavigationMenuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean( bottomNavigationMenuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
+                item.setShiftingMode(false);
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            Log.e("BNVHelper", "Unable to get shift mode field", e);
+        } catch (IllegalAccessException e) {
+            Log.e("BNVHelper", "Unable to change value of shift mode", e);
+        }
+
+        //Customize menu items
         for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
             //Get the menu item
             BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
@@ -88,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Add the custom MenuItemView
             bottomNavigationItemView.addView(customMenuItemView);
+
         }
     }
 

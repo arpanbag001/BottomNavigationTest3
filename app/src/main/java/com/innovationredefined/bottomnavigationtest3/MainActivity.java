@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationMenuItemImage = ((ImageView)bottomNavigationItemView.getChildAt(0)).getDrawable();
             bottomNavigationItemView.removeAllViews();
             ConstraintLayout customMenuItemView = (ConstraintLayout) layoutInflater.inflate(R.layout.bottom_nav_menu_item_customized, null, false);
-            ((ImageView)customMenuItemView.getChildAt(0)).setImageDrawable(bottomNavigationMenuItemImage);
-            ((TextView)customMenuItemView.getChildAt(1)).setText(bottomNavigationMenuItemLabel);
+            ((ImageView)((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(0)).setImageDrawable(bottomNavigationMenuItemImage);
+            ((TextView)((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(1)).setText(bottomNavigationMenuItemLabel);
             bottomNavigationItemView.addView(customMenuItemView);
         }
     }

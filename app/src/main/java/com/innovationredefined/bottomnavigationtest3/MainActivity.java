@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        customizeBottomNavigationView(bottomNavigationView,false);
+        customizeBottomNavigationView(bottomNavigationView, false,true);
     }
 
 
     @SuppressLint("RestrictedAPI")
-    void customizeBottomNavigationView(BottomNavigationView bottomNavigationView, boolean shouldShowLabels){
+    void customizeBottomNavigationView(BottomNavigationView bottomNavigationView, boolean shouldShowLabels, boolean shouldDisableShiftMOde) {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
 
         String bottomNavigationMenuItemLabel;
@@ -70,30 +70,31 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
 
         //Disable shift mode
-        try {
-            Field shiftingMode = bottomNavigationMenuView.getClass().getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean( bottomNavigationMenuView, false);
-            shiftingMode.setAccessible(false);
-            for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
-                BottomNavigationItemView item = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
-                item.setShiftingMode(false);
-                item.setChecked(item.getItemData().isChecked());
+        if (shouldDisableShiftMOde) {
+            try {
+                Field shiftingMode = bottomNavigationMenuView.getClass().getDeclaredField("mShiftingMode");
+                shiftingMode.setAccessible(true);
+                shiftingMode.setBoolean(bottomNavigationMenuView, false);
+                shiftingMode.setAccessible(false);
+                for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
+                    BottomNavigationItemView item = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
+                    item.setShiftingMode(false);
+                    item.setChecked(item.getItemData().isChecked());
+                }
+            } catch (NoSuchFieldException e) {
+                Log.e("BNVHelper", "Unable to get shift mode field", e);
+            } catch (IllegalAccessException e) {
+                Log.e("BNVHelper", "Unable to change value of shift mode", e);
             }
-        } catch (NoSuchFieldException e) {
-            Log.e("BNVHelper", "Unable to get shift mode field", e);
-        } catch (IllegalAccessException e) {
-            Log.e("BNVHelper", "Unable to change value of shift mode", e);
         }
-
         //Customize menu items
         for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
             //Get the menu item
             BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
 
             //Extract images and labels
-            bottomNavigationMenuItemLabel = ((TextView) ((BaselineLayout) bottomNavigationItemView.getChildAt(1)).getChildAt(0)) .getText().toString();
-            bottomNavigationMenuItemImage = ((ImageView)bottomNavigationItemView.getChildAt(0)).getDrawable();
+            bottomNavigationMenuItemLabel = ((TextView) ((BaselineLayout) bottomNavigationItemView.getChildAt(1)).getChildAt(0)).getText().toString();
+            bottomNavigationMenuItemImage = ((ImageView) bottomNavigationItemView.getChildAt(0)).getDrawable();
 
             //Remove the imageviews and textviews
             bottomNavigationItemView.removeAllViews();
@@ -102,12 +103,12 @@ public class MainActivity extends AppCompatActivity {
             ConstraintLayout customMenuItemView = (ConstraintLayout) layoutInflater.inflate(R.layout.bottom_nav_menu_item_customized, null, false);
 
             //Set the previously extracted data
-            ((ImageView)((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(0)).setImageDrawable(bottomNavigationMenuItemImage);
-            ((TextView)((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(1)).setText(bottomNavigationMenuItemLabel);
+            ((ImageView) ((ConstraintLayout) customMenuItemView.getChildAt(0)).getChildAt(0)).setImageDrawable(bottomNavigationMenuItemImage);
+            ((TextView) ((ConstraintLayout) customMenuItemView.getChildAt(0)).getChildAt(1)).setText(bottomNavigationMenuItemLabel);
 
             //Hide the Labels if necessary
-            if(!shouldShowLabels)
-                ((ConstraintLayout)customMenuItemView.getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+            if (!shouldShowLabels)
+                ((ConstraintLayout) customMenuItemView.getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
 
             //Add the custom MenuItemView
             bottomNavigationItemView.addView(customMenuItemView);

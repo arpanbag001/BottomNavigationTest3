@@ -1,5 +1,7 @@
 package com.innovationredefined.bottomnavigationtest3;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -50,26 +53,27 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+        customizeBottomNavigationView(bottomNavigationView);
+    }
 
-
+    void customizeBottomNavigationView(BottomNavigationView bottomNavigationView){
         LayoutInflater layoutInflater = LayoutInflater.from(this);
 
         String bottomNavigationMenuItemLabel;
+        Drawable bottomNavigationMenuItemImage;
+
+        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
 
         for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
             BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
             bottomNavigationMenuItemLabel = ((TextView) ((BaselineLayout) bottomNavigationItemView.getChildAt(1)).getChildAt(0)) .getText().toString();
+            bottomNavigationMenuItemImage = ((ImageView)bottomNavigationItemView.getChildAt(0)).getDrawable();
             bottomNavigationItemView.removeAllViews();
-
             ConstraintLayout customMenuItemView = (ConstraintLayout) layoutInflater.inflate(R.layout.bottom_nav_menu_item_customized, null, false);
-
+            ((ImageView)customMenuItemView.getChildAt(0)).setImageDrawable(bottomNavigationMenuItemImage);
             ((TextView)customMenuItemView.getChildAt(1)).setText(bottomNavigationMenuItemLabel);
-            //((TextView)findViewById(R.id.menu_item_txv)).setText(bottomNavigationMenuItemLabel);
             bottomNavigationItemView.addView(customMenuItemView);
         }
-
-
     }
 
 }
